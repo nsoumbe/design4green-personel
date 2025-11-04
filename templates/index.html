@@ -1,35 +1,74 @@
-<!DOCTYPE html><html><head>
-  <title>Résumé éco-responsable - Design4Green</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head><body>
-  <h1>🌱 Design4Green - Résumeur léger</h1>
-  <form id="form">
-    <textarea id="text" placeholder="Collez votre texte ici..."></textarea>
-    <br>
-    <label><input type="checkbox" id="optimized"> Mode optimisé</label>
-    <button type="button" onclick="summarize()">Résumer</button>
-  </form>
-  <div id="result"></div>
 
-  <script>async function summarize() {
-      const text = document.getElementById("text").value;
-      const optimized = document.getElementById("optimized").checked;
-      const resultDiv = document.getElementById("result");
+## 📄 **templates/index.html**
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résumé Éco-Responsable - Design4Green 2025</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📗 Résumé Éco-Responsable</h1>
+            <p class="subtitle">"Résumer mieux avec moins" - Design4Green 2025</p>
+        </header>
 
-      resultDiv.innerHTML = "<p>⏳ Génération du résumé...</p>";
+        <main>
+            <form id="summary-form">
+                <div class="form-group">
+                    <label for="text-input">Texte à résumer (max 4000 caractères) :</label>
+                    <textarea id="text-input" placeholder="Saisissez votre texte ici..." maxlength="4000" rows="6"></textarea>
+                    <div class="char-count">
+                        <span id="char-count">0</span>/4000 caractères
+                    </div>
+                </div>
 
-      const response = await fetch("/summarize", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({text, optimized})
-      });
+                <div class="form-group">
+                    <label for="mode-select">Mode de traitement :</label>
+                    <select id="mode-select">
+                        <option value="false">🔵 Mode Baseline (FP32)</option>
+                        <option value="true">🟢 Mode Optimisé (INT8)</option>
+                    </select>
+                </div>
 
-      const data = await response.json();
-      resultDiv.innerHTML = `
-        <p><b>Résumé :</b> ${data.summary}</p>
-        <p>Mode : ${data.optimized ? "Optimisé ⚡" : "Baseline 🧠"}</p>
-        <p>Latence : ${data.latency_ms} ms</p>
-        <p>Énergie : ${data.energy_wh} Wh</p>
-        <p>Mémoire : ${data.memory_mb} MB</p>
-      `;
-    }
-  </script></body></html>
+                <button type="submit" id="submit-btn">
+                    <span class="btn-text">Générer le résumé</span>
+                    <span class="btn-loading" style="display: none;">⏳ Traitement...</span>
+                </button>
+            </form>
+
+            <div id="results" class="results" style="display: none;">
+                <div class="summary-card">
+                    <h3>📝 Résumé généré (10-15 mots) :</h3>
+                    <div id="summary-content" class="summary-content"></div>
+                    <div class="word-count">
+                        <span id="word-count">0</span> mots
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h4>⚡ Énergie consommée</h4>
+                        <div id="energy-value" class="metric-value">-</div>
+                        <div class="metric-unit">Wh</div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>⏱️ Temps de traitement</h4>
+                        <div id="latency-value" class="metric-value">-</div>
+                        <div class="metric-unit">ms</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Design4Green 2025 - Application éco-conçue</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
